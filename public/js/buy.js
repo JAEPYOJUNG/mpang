@@ -6,7 +6,9 @@ $(function(){
 
 // 취소 버튼 클릭
 function setCancelEvent(){
-	
+	$('form button[type=reset]').click(function(){
+    window.history.back();
+  });
 }
 
 // 구매 버튼 클릭

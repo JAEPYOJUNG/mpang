@@ -7,6 +7,7 @@ var fs = require('fs');
 
 // DB 접속
 var db;
+
 MongoClient.connect('mongodb://localhost:27017', function(err, client){
 	db = client.db('mpang');
 	db.member = db.collection('member');
@@ -60,12 +61,37 @@ exports.couponList = function(options){
 // 쿠폰 상세 조회
 exports.couponDetail = function(_id, cb){
 	// coupon, shop, epilogue 조인
-	
-	// 뷰 카운트를 하나 증가시킨다.
-	
-	// 웹소켓으로 수정된 조회수 top5를 전송한다.
-	
-
+  db.coupon.aggregate([{
+    $match: {_id : new ObjectId(_id)}
+  }, {
+    // shop 조인
+    $lookup: {
+      from : 'shop',
+      localField : 'shopId',  //coupon.shopId
+      foreignField: '_id', // shop._id
+      as: 'shop'
+    }
+  }, {
+//  shop 조인한 결과 배열을 낱개의 속성으로 변환한다.
+$unwind: '$shop'
+  }, {
+      // epilogue 조인
+      $lookup: {
+        from : 'epilogue',
+        localField : '_id',  //coupon.shopId
+        foreignField: 'couponId', // shop._id
+        as: 'epilogueList'
+      }
+  }]).toArray(function(err, result){
+    // result 가 배열로 넘어온다, 그중1개 만쓸 것이기에
+    var coupon = result[0];
+    clog.debug(coupon);
+    // 뷰 카운트를 하나 증가시킨다.
+    db.coupon.update({ _id : coupon._id },{$inc: {viewCount: 1}}, function(){
+      // 웹소켓으로 수정된 조회수 top5를 전송한다.
+    });
+    cb(coupon);
+  });
 };
 
 // 구매 화면에 보여줄 쿠폰 정보 조회
@@ -77,7 +103,10 @@ exports.buyCouponForm = function(_id, cb){
     buyQuantity: 1,
     'image.detail': 1
 	};
-	// TODO 쿠폰 정보를 조회한다.
+  // TODO 쿠폰 정보를 조회한다.
+  db.coupon.findOne({_id : new ObjectId(_id)},fields,function(err,result){
+    cb(result);
+  });
 
 };
 

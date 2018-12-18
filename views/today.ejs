@@ -92,7 +92,7 @@
             
             <article class= "p<%=i%>" tabindex="0">
               <h1><%=coupon.couponName%></h1>
-              <a href="/detail">
+              <a href="/coupons/<%=coupon._id%>">
                 <img class="list_img" src="/image/coupon/<%=coupon.image.main.file%>" alt="<%=coupon.image.main.desc%>">
               </a>
               <section class="content">						
@@ -101,7 +101,6 @@
                 </ul>
               </section>
             </article>
-
           <% }); %>
 
         
