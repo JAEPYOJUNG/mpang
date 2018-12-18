@@ -56,7 +56,8 @@ MongoClient.connect('mongodb://localhost:27017',function(err,client){
 // 로그 메세지 출력
 function myLog(str, result){
 	clog.info(str);
-	clog.debug(util.inspect(result) + "\n"); //util core모듈에 inspect를사용하면배열을 json형태로 잘 뿌려준다
+  // clog.debug(util.inspect(result) + "\n"); //util core모듈에 inspect를사용하면배열을 json형태로 잘 뿌려준다
+  clog.debug(util.inspect(result, {depth:10}) + "\n"); //util core모듈에 inspect를사용하면배열을 json형태로 잘 뿌려준다
 }
 
 
@@ -171,13 +172,28 @@ function list(str, next){
 
 // TODO 9. 1번 게시물 조회 후 comment 추가
 function todo9(){
-	
+	db.board.findOne({no: 1}, function(err, data){
+    var comment = {
+      name: '이영희',
+      content: '퍼가요~'
+    };
+
+    data.comments = data.comments || [];    
+    data.comments.push(comment);
+
+    db.board.update({no:1},{$set: {comments:data.comments}},function(){
+      list('TODO 9. 1번 게시물 조회 후 comment 추가',todo10);
+    });
+  });
+  
 }
 
 // TODO 10. 2번 게시물 삭제
 // remove({검색 조건})
 function todo10(){
-	
+  db.board.remove({no:2},function(){
+    list('TODO 10. 2번 게시물 삭제');
+  });
 }
 
 
