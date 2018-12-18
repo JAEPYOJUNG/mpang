@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var model = require('../model/mulpangDao');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -7,6 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/today', function(req, res, next) {
+  model.couponList();
   res.render('today', { title: '오늘의 메뉴x' });
 });
 

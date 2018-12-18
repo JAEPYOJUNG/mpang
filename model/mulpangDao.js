@@ -8,7 +8,7 @@ var fs = require('fs');
 // DB 접속
 var db;
 MongoClient.connect('mongodb://localhost:27017', function(err, client){
-	db = client.db('mulpang');
+	db = client.db('mpang');
 	db.member = db.collection('member');
 	db.shop = db.collection('shop');
 	db.coupon = db.collection('coupon');
@@ -16,6 +16,9 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
 	db.epilogue = db.collection('epilogue');
 	console.log('DB 접속 완료.');
 });
+
+// exports = module.exports;
+// return module.exports;
 
 // 쿠폰 목록조회
 exports.couponList = function(options){
@@ -47,7 +50,10 @@ exports.couponList = function(options){
 	};
 	
 	// TODO 전체 쿠폰 목록을 조회한다.
-
+    var count = 5;
+    db.coupon.find(query ,fields).limit(count).toArray(function(err,result){
+      clog.debug(result);
+    });
 };
 
 // 쿠폰 상세 조회

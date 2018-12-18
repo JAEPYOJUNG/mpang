@@ -9,10 +9,10 @@ clog.configure({"log level": 5});
 var db;
 MongoClient.connect('mongodb://localhost:27017', function(err, client){
 	if(err) console.error(err);
-	db = client.db('mulpang');
+	db = client.db('mpang');
 	// 현재 DB 삭제
 	db.command({dropDatabase: 1}, function(err){
-		clog.info("mulpang DB 삭제.");
+		clog.info("mpang DB 삭제.");
 		db.member = db.collection('member');
 		db.shop = db.collection('shop');
 		db.coupon = db.collection('coupon');
