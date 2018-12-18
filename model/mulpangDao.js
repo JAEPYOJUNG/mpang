@@ -53,6 +53,7 @@ exports.couponList = function(options){
     var count = 5;
     db.coupon.find(query ,fields).limit(count).toArray(function(err,result){
       clog.debug(result);
+      options.callback(result);
     });
 };
 

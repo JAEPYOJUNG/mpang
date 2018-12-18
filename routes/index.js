@@ -8,8 +8,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/today', function(req, res, next) {
-  model.couponList();
-  res.render('today', { title: '오늘의 메뉴x' });
+  model.couponList({
+    callback: function(list){
+      res.render('today', { title: '오늘의 메뉴x', list: list });
+    }
+  });
 });
 
 router.get('/detail', function(req, res, next) {
