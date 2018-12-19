@@ -11,8 +11,11 @@ var db;
 // mongodump -h localhost:27017 -d mpang -o c:\
 // mongorestore -h ds225624.mlab.com:25624 -d mpang -u jaepyo -p a12345 c:\mpang
 
-
-
+// mongoexport -h localhost:27017 -d mpang -c coupon  -o C:\html5project\workspace\mulpang\doc\coupon_json
+mongoexport -h localhost:27017 -d mpang -c shop  -o C:\html5project\workspace\mulpang\doc\shop
+mongoexport -h localhost:27017 -d mpang -c purchase  -o C:\html5project\workspace\mulpang\doc\purchase
+mongoexport -h localhost:27017 -d mpang -c epilogue  -o C:\html5project\workspace\mulpang\doc\epilogue
+mongoexport -h localhost:27017 -d mpang -c member  -o C:\html5project\workspace\mulpang\doc\member
 
 // MongoClient.connect(process.env.MONGO_DB, function(err, client){
   
@@ -140,26 +143,26 @@ function registCoupon(){
 	db.shop.find().toArray(function(err, shops){
 		shopObjId = shops;
 		var coupons = [
-       {
-				_id: couponObjId[15],
-				shopId: shopObjId[2]._id, 
-				region: "홍대",
-				position: {lat: 37.553446, lng: 126.925688},
-				couponName: "디저트 마카롱", 
-				primeCost: 5500, 
-				price: 4700, 
-				quantity: 100, 
-				saleDate: {start: getDay(-1), finish: getDay(5)}, 
-				useDate: {start: getDay(-2), finish: getDay(60)}, 
-				image: {main: {file: "coupon_16.jpg", desc: "디저트 마카롱 메인 이미지"}, detail: {file: "coupon_16_detail.jpg", desc: "디저트 마카롱 상세 이미지"}, etc: [{file: "coupon_16_1.jpg", desc: "디저트 마카롱/그린티"}, {file: "coupon_16_2.jpg", desc: "디저트 마카롱/스트로베리"}]}, 
-				desc: "바삭하고 쫀득한 초코 마카롱과 망고 마카롱사이에 새콤달콤한 패션망고크림과 상큼한 요거생크림, 신선한 과일을 담아낸 디저트", 
-				comment: "한 테이블에 하나만 사용 가능.", 
-				buyQuantity: 20, 
-				regDate: getDay(-30),
-				epilogueCount: 52,
-				viewCount: 270,
-				satisfactionAvg: 3.678454
-       },
+        {
+          _id: couponObjId[15],
+          shopId: shopObjId[2]._id, 
+          region: "홍대",
+          position: {lat: 37.553446, lng: 126.925688},
+          couponName: "디저트 마카롱", 
+          primeCost: 5500, 
+          price: 4700, 
+          quantity: 100, 
+          saleDate: {start: getDay(-1), finish: getDay(5)}, 
+          useDate: {start: getDay(-2), finish: getDay(60)}, 
+          image: {main: {file: "coupon_16.jpg", desc: "디저트 마카롱 메인 이미지"}, detail: {file: "coupon_16_detail.jpg", desc: "디저트 마카롱 상세 이미지"}, etc: [{file: "coupon_16_1.jpg", desc: "디저트 마카롱/그린티"}, {file: "coupon_16_2.jpg", desc: "디저트 마카롱/스트로베리"}]}, 
+          desc: "바삭하고 쫀득한 초코 마카롱과 망고 마카롱사이에 새콤달콤한 패션망고크림과 상큼한 요거생크림, 신선한 과일을 담아낸 디저트", 
+          comment: "한 테이블에 하나만 사용 가능.", 
+          buyQuantity: 20, 
+          regDate: getDay(-30),
+          epilogueCount: 52,
+          viewCount: 270,
+          satisfactionAvg: 3.678454
+        },
    		{
    			_id: couponObjId[1],
    			shopId: shopObjId[1]._id, 

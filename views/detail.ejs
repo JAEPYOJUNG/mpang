@@ -53,6 +53,8 @@
                   <% if(coupon.video){ %>
                     <video src="/video/<%=coupon.video.src%>"
                       controls preload="none"
+                      autoplay
+                      loop
                       poster="/video/<%=coupon.video.poster%>"
                       alt="<%=coupon.video.desc%>">
                   <% }else{ %>

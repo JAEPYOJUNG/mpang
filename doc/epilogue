@@ -1,0 +1,7 @@
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8d7"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8c3"},"writer":"uzoolove@gmail.com","satisfaction":4.5,"content":"치맥 괜찮아요. 하지만 물냉면은 비추...","regDate":"2018-12-18"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8d8"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8c3"},"writer":"uzoolove@gmail.com","satisfaction":5,"content":"치맥은 역시 을지로 골뱅이가 최고.","regDate":"2018-12-18"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8d9"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8c4"},"writer":"uzoolove@gmail.com","satisfaction":5,"content":"와플 짱!!! 강추해요.","regDate":"2018-12-11"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8da"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8c4"},"writer":"test@test.com","satisfaction":3.5,"content":"벌써 두번째 구매인데 와플이 맛있어요.","regDate":"2018-11-29"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8db"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8d2"},"writer":"seulbinim@gmail.com","satisfaction":5,"content":"소지섭 봤어요.","regDate":"2018-12-15"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8dc"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8d2"},"writer":"test@test.com","satisfaction":5,"content":"그린티보다는 스트로베리가 더 맛있어요.","regDate":"2018-12-16"}
+{"_id":{"$oid":"5c19dd2d65b55119c4c7a8dd"},"couponId":{"$oid":"5c19dd2d65b55119c4c7a8d2"},"writer":"uzoolove@gmail.com","satisfaction":4.5,"content":"최고입니다.","regDate":"2018-12-18"}
