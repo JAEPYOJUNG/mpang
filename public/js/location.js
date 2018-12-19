@@ -19,6 +19,8 @@ Util.require('https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0
 
 // 1. 지도를 보여주고 현재 위치 찾기
 var map;
+var search = location.search.substring(1);
+
 function initMap(){
 	// 1.1 구글맵 로딩
   var mapContainer = document.querySelector('#location_map');
@@ -27,9 +29,19 @@ function initMap(){
     center: { lat : 37.5552992,lng : 126.8642948},
     zoom: 14
   };
+
+  if(search){
+    var qsArray= search.split('&');
+    var lat = qsArray[0].split('=')[1];
+    var lng = qsArray[1].split('=')[1];
+    var zoom = qsArray[2].split('=')[1];
+    mapOptions.center = {lat: parseFloat(lat) , lng: parseFloat(lng)};
+    mapOptions.zoom = parseInt(zoom);
+  }
+
   map = new google.maps.Map(mapContainer,mapOptions);
   // 1.2 현재 위치 찾기
-  window.navigator.geolocation.getCurrentPosition(success,fail);
+  navigator.geolocation.getCurrentPosition(success,fail);
 			
 	function success(position){
 		// 1.3 지도를 현재 위치로 이동
@@ -39,7 +51,10 @@ function initMap(){
         };
         console.log("location : ");
         console.log(here);
-        map.setCenter(here);
+        if(!search){
+          map.setCenter(here);
+        }
+        
     // 1.4 현재 위치에 마커 표시
         new google.maps.Marker({
           map:map,
@@ -128,7 +143,16 @@ function addCouponToMap(){
     });
 		// 첫번째 쿠폰으로 슬라이더 이동
     slide(0);
-		// 현재 위치를 history에 기록
+    // 현재 위치를 history에 기록
+    var center = map.getCenter();
+    var qs = {
+      lat: center.lat(),
+      lgn: center.lng(),
+      zoom: map.getZoom()
+    };
+    var url = 'location?' + $.param(qs);
+    window.history.replaceState({},'map',url);
+    location.href
 	}
 
 	// 지도 로딩완료 이벤트
