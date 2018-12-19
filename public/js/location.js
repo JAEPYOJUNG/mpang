@@ -1,5 +1,6 @@
-Util.require('https://maps.googleapis.com/maps/api/js?key=AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4&callback=initMap');
-//AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4 --teacher
+Util.require('https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nk&callback=initMap');
+//AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4x --teacher
+// AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nkx --me
 // google maps api 참조 -> https://developers.google.com/maps/documentation/javascript/tutorial?hl=ko
 
 /*
@@ -82,12 +83,35 @@ function addCouponToMap(){
 	articleList = $('.coupon_list article');
   // 2.1 지도에 쿠폰 추가
   articleList.each(function(){
+    var article = $(this);
+    var couponName = article.find('h1').text();
+    var position = { lat : article.data('lat') , lng : article.data('lng') };
+
+    article.data('position',position);
     
     // 쿠폰 마커 생성 
-    
+    var marker = new google.maps.Marker({
+      map:map,
+      position: position,
+      title: couponName,
+      icon: {
+        url:'/css/svg/icon_map_coupon.svg',
+        scaleSize: new google.maps.Size(60,30)
+      }
+    });
+
     // 지도 클릭 시 보여줄 정보창 생성
+    var info = new google.maps.InfoWindow({
+      position: position,
+      content: article.html()
+    });
     
     // 마커 클릭 이벤트 추가
+    marker.addListener('click', function(){
+      if(openWindow) openWindow.close();
+      info.open(map);
+      openWindow = info;
+    });
     
 	});
 

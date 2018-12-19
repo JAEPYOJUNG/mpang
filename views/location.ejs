@@ -13,7 +13,8 @@
           <!--  쿠폰 목록 출력 영역 -->
              
           <% list.forEach(function(coupon, i ){ %>
-            <article tabindex="0" class="location_slide_act">
+            <article tabindex="0" data-lat="<%=coupon.position.lat%>" data-lng="<%=coupon.position.lng%>">
+              <!-- data- 로하는건 custom attribute로 정보전달시 사용 -->
                 <h1><%=coupon.couponName%></h1>
                 <a href="/coupons/<%=coupon._id%>">
                   <img class="detail_img" src="image/coupon/<%=coupon.image.detail.file%>" alt="<%=coupon.image.detail.desc%>">
