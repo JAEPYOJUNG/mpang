@@ -1,4 +1,4 @@
-Util.require('https://maps.googleapis.com/maps/api/js?key=process.env.GOOGLE_MAP_KEY||AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4&callback=initMap');
+Util.require('https://maps.googleapis.com/maps/api/js?key=AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4&callback=initMap');
 //AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4 --teacher
 // google maps api 참조 -> https://developers.google.com/maps/documentation/javascript/tutorial?hl=ko
 
@@ -38,11 +38,23 @@ function initMap(){
         };
         console.log("location : ");
         console.log(here);
+        map.setCenter(here);
     // 1.4 현재 위치에 마커 표시
-        
+        new google.maps.Marker({
+          map:map,
+          position: here
+        });
 						
 		// 1.5 현재 위치의 오차 표시
-		
+        new google.maps.Circle({
+          map:map,
+          center:here,
+          radius:position.coords.accuracy,
+          strokeColor: 'blue',
+          strokeOpacity:0.2,
+          fillColor:'blue',
+          fillOpacity: 0.1
+        });
 	}
 
 	function fail(err){
