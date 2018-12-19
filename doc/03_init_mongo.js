@@ -8,9 +8,16 @@ clog.configure({"log level": 5});
 // DB 접속
 var db;
 
+// mongodump -h localhost:27017 -d mpang -o c:\
+// mongorestore -h ds225624.mlab.com:25624 -d mpang -u jaepyo -p a12345 c:\mpang
+
+
+
 
 // MongoClient.connect(process.env.MONGO_DB, function(err, client){
-MongoClient.connect('mongodb://localhost:27017', function(err, client){
+  
+MongoClient.connect('mongodb://jaepyo:a12345@ds225624.mlab.com:25624/mpang', function(err, client){
+// MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(err, client){
 	if(err) console.error(err);
 	db = client.db('mpang');
 	// 현재 DB 삭제
