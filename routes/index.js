@@ -51,14 +51,20 @@ router.post('/purchase', function(req, res, next){
     }
   });
 });
-router.get('/location', function(req, res, next) {
-  res.render('location', { title: '근처 쿠폰' });
+router.get('/location', function(req, res, next){
+  res.render('location', {title: '근처 쿠폰', css: 'location.css', js: 'location.js'});  
 });
-router.get('/best', function(req, res, next) {
-  res.render('best', { title: '추천 쿠폰' });
+router.get('/best', function(req, res, next){
+  res.render('best', {title: '추천 쿠폰', css: 'best.css', js: 'best.js'});  
 });
-router.get('/all', function(req, res, next) {
-  res.render('all', { title: '모든 쿠폰' });
+router.get('/topCoupon', function(req, res, next){
+  res.json([]);
+});
+router.get('/all', function(req, res, next){
+  res.render('all', {title: '모든 쿠폰', css: 'all.css'});  
+});
+router.get('/couponQuantity', function(req, res, next){
+  res.end('success');
 });
 
 module.exports = router;
