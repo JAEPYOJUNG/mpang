@@ -4,11 +4,12 @@ var util = require('util');
 var path = require('path');
 var clog = require('clog');
 var fs = require('fs');
+var MyUtil = require('../utils/myutil');
 
 // DB 접속
 var db;
 
-MongoClient.connect('mongodb://localhost:27017', function(err, client){
+MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(err, client){
 	db = client.db('mpang');
 	db.member = db.collection('member');
 	db.shop = db.collection('shop');
@@ -128,9 +129,18 @@ exports.buyCoupon = function(params, cb){
 	};
 
 	// TODO 구매 정보를 등록한다.
-	
-	// TODO 쿠폰 구매 건수를 하나 증가시킨다.
-	
+	 db.purchase.insert(document,function(err,result){
+     if(err){
+       clog.error(err);
+       cb({message: '쿠폰 구매에실패했습니다. 잠시 후 다시 해보세요'})
+     }else{
+       // TODO 쿠폰 구매 건수를 하나 증가시킨다.
+      db.coupon.update({ _id : document.couponId },{$inc: {buyQuantity: document.quantity}},function(){
+        cb(null,document.couponId);
+      });
+     }
+   });
+  
 };	
 	
 // 추천 쿠폰 조회

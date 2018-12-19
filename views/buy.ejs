@@ -73,6 +73,8 @@
             <section class="form_section">
               <h1>구매하기</h1>
               <form novalidate>
+                <input type="hidden" name="couponId" value="<%=coupon._id%>">
+                <input type="hidden" name="unitPrice" value="<%=coupon.price%>">
                 <img src="/css/svg/cart_form.svg">
                 <table>
                   <tbody>

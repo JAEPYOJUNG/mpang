@@ -24,9 +24,24 @@ router.get('/coupons/:no', function(req, res, next) {
 });
 
 router.get('/purchase/:no',function(req,res,next){
-  model.buyCouponForm(req.param.no, function(coupon){
+  model.buyCouponForm(req.params.no, function(coupon){
     res.render('buy',{title: '디저트 마카롱',coupon:coupon})
   });
+});
+
+router.post('/purchase',function(req, res, next){
+  model.buyCoupon(req.body, function(err,result){
+    if(err){
+      res.json({errors: err});
+
+      // 위와같은내용
+      // var result = JSON.stringify({errors:err});
+      // res.end(result);
+    }else{
+      res.end('OK');
+    }
+  });
+
 });
 
 router.get('/location', function(req, res, next) {
