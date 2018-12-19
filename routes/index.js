@@ -13,7 +13,9 @@ router.get('/today', function(req, res, next) {
       res.render('today', { 
         title: '오늘의 메뉴', 
         list: list,
-        css: 'today.css'
+        css: 'today.css',
+        today:MyUtil.getDay(),
+        now:MyUtil.getTime()
       });
     }
   });
@@ -52,7 +54,12 @@ router.post('/purchase', function(req, res, next){
   });
 });
 router.get('/location', function(req, res, next){
-  res.render('location', {title: '근처 쿠폰', css: 'location.css', js: 'location.js'});  
+  model.couponList({
+    callback: function(list){
+      res.render('location', {title: '근처 쿠폰',list: list , css: 'location.css', js: 'location.js'});  
+    }
+  });
+  
 });
 router.get('/best', function(req, res, next){
   res.render('best', {title: '추천 쿠폰', css: 'best.css', js: 'best.js'});  
