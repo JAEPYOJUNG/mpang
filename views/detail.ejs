@@ -12,9 +12,17 @@
           <!-- 쿠폰 상세정보 출력 영역 -->		
           <article class="detail" data-couponid="<%=coupon._id%>">
             <h1><%=coupon.couponName%></h1>
+            <img class="list_img" 
+            src="/image/coupon/<%=coupon.image.main.file%>" 
+            alt="<%=coupon.image.main.desc%>">
+            <img class="list_img" 
+            src="/image/coupon/<%=coupon.image.main.file%>" 
+            alt="<%=coupon.image.main.desc%>">
             <img class="detail_img" 
               src="/image/coupon/<%=coupon.image.detail.file%>" 
               alt="<%=coupon.image.detail.desc%>">
+             
+
             <section class="content">
 							<p class="note">
                 <%=coupon.desc%>

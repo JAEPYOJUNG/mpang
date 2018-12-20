@@ -24,13 +24,14 @@ MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(
 
 // 쿠폰 목록조회
 exports.couponList = function(options){
+  options.qs = options.qs || {};
 	// 검색 조건
   var query = {};
   var now = MyUtil.getDay();
   
   // 1. 판매 시작일이 지난 쿠폰, 구매 가능 쿠폰(기본 검색조건)
   query['saleDate.start' ] = {$lte : now};
-  query['saleDate.finish'] = {$gte: now};
+  query['saleDate.finish'] = {$gte : now};
 
   // 2. 구매가능/지난쿠폰/전체
   switch(options.qs.date){
@@ -46,14 +47,25 @@ exports.couponList = function(options){
   if(location){
     query['region'] = location;
   }
-	// 4. 검색어	
+  // 4. 검색어	
+  var keyword = options.qs.keyword;
+  if(keyword && keyword.trim() != ''){
+    var regExp = new RegExp(keyword, 'i');
+    query['$or'] = [{couponName : regExp},{desc : regExp}];
+
+  }
 
 	// 정렬 옵션
 	var orderBy = {};
-	// 1. 사용자 지정 정렬 옵션	
-	// 2. 판매 시작일 내림차순(최근 쿠폰)	
+  // 1. 사용자 지정 정렬 옵션	
+  var orderCondition = options.qs.order;
+  if(orderCondition){
+    orderBy[orderCondition] = -1;
+  }
+  // 2. 판매 시작일 내림차순(최근 쿠폰)	
+  orderBy['saleDate.start'] = -1;
 	// 3. 판매 종료일 오름차순(종료 임박 쿠폰)
-
+  orderBy['saleDate.finish'] = 1;
 	// 출력할 속성 목록
 	var fields = {
 		couponName: 1,
@@ -68,11 +80,21 @@ exports.couponList = function(options){
 		position: 1
 	};
 	
-	// TODO 전체 쿠폰 목록을 조회한다.
+  // TODO 전체 쿠폰 목록을 조회한다.
+
     var count = 0;
-    db.coupon.find(query ,fields).limit(count).toArray(function(err,result){
-      clog.debug(result.length);
-      options.callback(result);
+    var offset = 0;
+    if(options.qs.page){
+      count = 5;
+      offset = (options.qs.page - 1) * count;
+    }
+    var cursor = db.coupon.find(query ,fields);
+    cursor.count(function(err,totalcount){
+      cursor.skip(offset).sort(orderBy).limit(count).toArray(function(err,result){
+        clog.debug(result.length);
+        result.totalPage = Math.floor((totalcount + count-1)/count);
+        options.callback(result);
+      });
     });
 };
 
@@ -165,11 +187,19 @@ exports.buyCoupon = function(params, cb){
 	
 // 추천 쿠폰 조회
 var topCoupon = exports.topCoupon = function(condition, cb){
+  // 검색 조건
+  var query = {};
+  var now = MyUtil.getDay();
+  
+  // 1. 판매 시작일이 지난 쿠폰, 구매 가능 쿠폰(기본 검색조건)
+  query['saleDate.start' ] = {$lte : now};
+  query['saleDate.finish'] = {$gte : now};
+
   var order = {};
   order[condition] = -1; //-1 : desc , 1 : asc
   var fields = {couponName : 1};
   fields [condition] = 1;
-  db.coupon.find({},fields ).sort(order).limit(5).toArray(function(err,result){
+  db.coupon.find(query,fields ).sort(order).limit(5).toArray(function(err,result){
     clog.debug(condition, result);
     cb(result);
   });
