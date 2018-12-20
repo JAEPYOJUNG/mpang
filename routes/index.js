@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 });
 router.get('/today', function(req, res, next) {
   model.couponList({
+    qs: req.query,  //주소창의 쿼리스트링(url뒷부분)
     callback: function(list){
       res.render('today', { 
         title: '오늘의 메뉴', 
@@ -79,7 +80,13 @@ router.get('/topCoupon', function(req, res, next){
 });
  
 router.get('/all', function(req, res, next){
-  res.render('all', {title: '모든 쿠폰', css: 'all.css'});  
+  model.couponList({
+    qs: req.query,  //주소창의 쿼리스트링(url뒷부분)
+    callback: function(list){
+      res.render('all', {title: '모든 쿠폰', css: 'all.css',list:list});  
+    }
+  });
+
 });
 router.get('/couponQuantity', function(req, res, next){
   res.end('success');

@@ -25,10 +25,27 @@ MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(
 // 쿠폰 목록조회
 exports.couponList = function(options){
 	// 검색 조건
-	var query = {};
-	// 1. 판매 시작일이 지난 쿠폰, 구매 가능 쿠폰(기본 검색조건)	
-	// 2. 구매가능/지난쿠폰/전체	
-	// 3. 지역명	
+  var query = {};
+  var now = MyUtil.getDay();
+  
+  // 1. 판매 시작일이 지난 쿠폰, 구매 가능 쿠폰(기본 검색조건)
+  query['saleDate.start' ] = {$lte : now};
+  query['saleDate.finish'] = {$gte: now};
+
+  // 2. 구매가능/지난쿠폰/전체
+  switch(options.qs.date){
+    case  'past':
+      query['saleDate.finish'] = {$lte: now};
+      break;
+    case  'all':
+      delete query['saleDate.finish'];
+      break;
+  }	
+  // 3. 지역명	
+  var location = options.qs.location;
+  if(location){
+    query['region'] = location;
+  }
 	// 4. 검색어	
 
 	// 정렬 옵션
@@ -52,9 +69,9 @@ exports.couponList = function(options){
 	};
 	
 	// TODO 전체 쿠폰 목록을 조회한다.
-    var count = 5;
+    var count = 0;
     db.coupon.find(query ,fields).limit(count).toArray(function(err,result){
-      clog.debug(result);
+      clog.debug(result.length);
       options.callback(result);
     });
 };
@@ -86,7 +103,7 @@ $unwind: '$shop'
   }]).toArray(function(err, result){
     // result 가 배열로 넘어온다, 그중1개 만쓸 것이기에
     var coupon = result[0];
-    clog.debug(coupon);
+    clog.debug(coupon.length);
     // 뷰 카운트를 하나 증가시킨다.
     db.coupon.update({ _id : coupon._id },{$inc: {viewCount: 1}}, function(){
     // 웹소켓으로 수정된 조회수 top5를 전송한다.
