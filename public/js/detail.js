@@ -72,6 +72,6 @@ function addCart(coupon){
     common.cart.showCart();
     alert(couponName+ '\n관심쿠폰으로 등록되었습니다요.');
     // TODO 알림메세지 사용 여부 체크
-    
+    Notification.requestPermission();
   }
 }

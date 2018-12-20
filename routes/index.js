@@ -112,7 +112,12 @@ router.get('/all', function(req, res, next){
 
 });
 router.get('/couponQuantity', function(req, res, next){
-  res.end('success');
+  model.couponQuantity(req.query.couponIdList.split(','), function(result){
+    res.contentType('text/event-stream');
+    res.write('data:' + JSON.stringify(result) + '\n');
+    res.write('\n');
+    res.end('retry:' + 1000*10 + '\n');
+  });
 });
 
 module.exports = router;
