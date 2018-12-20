@@ -31,8 +31,8 @@ $(function(){
   $.getJSON('/topCoupon',{condition: 'epilogueCount'},drawReplyGraph);
 
     //웹소켓 서버연결
-    var socket = io('ws://localhost'); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
-    // var socket = io(); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
+    // var socket = io('ws://localhost'); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
+    var socket = io(); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
     socket.on('top5',drawViewGraph);
 });
 
