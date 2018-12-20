@@ -22,7 +22,9 @@ router.get('/today', function(req, res, next) {
 });
 router.get('/coupons/:no', function(req, res, next) {
   var couponId = req.params.no;
-  model.couponDetail(couponId, function(coupon){
+  var socketio =req.app.get('io');
+
+  model.couponDetail(socketio , couponId, function(coupon){
     res.render('detail', {
       title: coupon.couponName, 
       coupon: coupon, 
@@ -56,7 +58,12 @@ router.post('/purchase', function(req, res, next){
 router.get('/location', function(req, res, next){
   model.couponList({
     callback: function(list){
-      res.render('location', {title: '근처 쿠폰',list: list , css: 'location.css', js: 'location.js'});  
+      res.render('location', {
+        title: '근처 쿠폰',
+        list: list , 
+        css: 'location.css', 
+        js:  'location.js'
+      });  
     }
   });
   
@@ -64,9 +71,13 @@ router.get('/location', function(req, res, next){
 router.get('/best', function(req, res, next){
   res.render('best', {title: '추천 쿠폰', css: 'best.css', js: 'best.js'});  
 });
+
 router.get('/topCoupon', function(req, res, next){
-  res.json([]);
+ model.topCoupon(req.query.condition, function(list){
+   res.json(list);
+ });
 });
+ 
 router.get('/all', function(req, res, next){
   res.render('all', {title: '모든 쿠폰', css: 'all.css'});  
 });

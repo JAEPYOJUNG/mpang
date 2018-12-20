@@ -60,7 +60,7 @@ exports.couponList = function(options){
 };
 
 // 쿠폰 상세 조회
-exports.couponDetail = function(_id, cb){
+exports.couponDetail = function(io, _id, cb){
 	// coupon, shop, epilogue 조인
   db.coupon.aggregate([{
     $match: {_id : new ObjectId(_id)}
@@ -89,7 +89,10 @@ $unwind: '$shop'
     clog.debug(coupon);
     // 뷰 카운트를 하나 증가시킨다.
     db.coupon.update({ _id : coupon._id },{$inc: {viewCount: 1}}, function(){
-      // 웹소켓으로 수정된 조회수 top5를 전송한다.
+    // 웹소켓으로 수정된 조회수 top5를 전송한다.
+    topCoupon('viewCount',function(result){
+        io.emit('top5',result);
+      });  
     });
     cb(coupon);
   });
@@ -145,7 +148,14 @@ exports.buyCoupon = function(params, cb){
 	
 // 추천 쿠폰 조회
 var topCoupon = exports.topCoupon = function(condition, cb){
-	
+  var order = {};
+  order[condition] = -1; //-1 : desc , 1 : asc
+  var fields = {couponName : 1};
+  fields [condition] = 1;
+  db.coupon.find({},fields ).sort(order).limit(5).toArray(function(err,result){
+    clog.debug(condition, result);
+    cb(result);
+  });
 };
 
 // 지정한 쿠폰 아이디 목록을 받아서 남은 수량을 넘겨준다.

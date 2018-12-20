@@ -12,10 +12,10 @@ var db;
 // mongorestore -h ds225624.mlab.com:25624 -d mpang -u jaepyo -p a12345 c:\mpang
 
 // mongoexport -h localhost:27017 -d mpang -c coupon  -o C:\html5project\workspace\mulpang\doc\coupon_json
-mongoexport -h localhost:27017 -d mpang -c shop  -o C:\html5project\workspace\mulpang\doc\shop
-mongoexport -h localhost:27017 -d mpang -c purchase  -o C:\html5project\workspace\mulpang\doc\purchase
-mongoexport -h localhost:27017 -d mpang -c epilogue  -o C:\html5project\workspace\mulpang\doc\epilogue
-mongoexport -h localhost:27017 -d mpang -c member  -o C:\html5project\workspace\mulpang\doc\member
+// mongoexport -h localhost:27017 -d mpang -c shop  -o C:\html5project\workspace\mulpang\doc\shop
+// mongoexport -h localhost:27017 -d mpang -c purchase  -o C:\html5project\workspace\mulpang\doc\purchase
+// mongoexport -h localhost:27017 -d mpang -c epilogue  -o C:\html5project\workspace\mulpang\doc\epilogue
+// mongoexport -h localhost:27017 -d mpang -c member  -o C:\html5project\workspace\mulpang\doc\member
 
 // MongoClient.connect(process.env.MONGO_DB, function(err, client){
   
@@ -23,8 +23,10 @@ MongoClient.connect('mongodb://jaepyo:a12345@ds225624.mlab.com:25624/mpang', fun
 // MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(err, client){
 	if(err) console.error(err);
 	db = client.db('mpang');
-	// 현재 DB 삭제
-	db.command({dropDatabase: 1}, function(err){
+  // 현재 DB 삭제
+  
+  // db.command({dropDatabase: 1}, function(err){
+	db.command({}, function(err){
 		clog.info("mpang DB 삭제.");
 		db.member = db.collection('member');
 		db.shop = db.collection('shop');

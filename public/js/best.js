@@ -9,27 +9,47 @@ Util.require('lib/Chart.js');
 // Flotr2(http://humblesoftware.com/flotr2) 라이브러리를 import 한다.
 Util.require('lib/flotr2.js');
 
-// socket.io 라이브러리
+// socket.io 라이브러리 (socket server를 생성하면 브라우저가아래 dir로자동제공한다)
 Util.require('/socket.io/socket.io.js');
 
 $(function(){
-	var data = [{couponName: '와플세트', buyQuantity: 345}
+	/* var data = [{couponName: '와플세트', buyQuantity: 345}
 					, {couponName: '베스킨라빈스', buyQuantity: 245}
 					, {couponName: '일말에', buyQuantity: 128}
 					, {couponName: '자연산 활어회', buyQuantity: 99}
 					, {couponName: '치맥', buyQuantity: 50}];
 	
 	drawSaleGraph(data);	
-//	drawPointGraph(data);
-//	drawViewGraph(data);
-//	drawReplyGraph(data);
+	drawPointGraph(data);
+	drawViewGraph(data);
+  drawReplyGraph(data);
+  */
+
+  $.getJSON('/topCoupon',{condition: 'buyQuantity'},drawSaleGraph);
+  $.getJSON('/topCoupon',{condition: 'satisfactionAvg'},drawPointGraph);
+  $.getJSON('/topCoupon',{condition: 'viewCount'},drawViewGraph);
+  $.getJSON('/topCoupon',{condition: 'epilogueCount'},drawReplyGraph);
+
+    //웹소켓 서버연결
+    var socket = io('ws://localhost'); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
+    // var socket = io(); //'ws://localhost' 주소를 생략하면 브라우저상의 url 주소로 하여사용한다
+    socket.on('top5',drawViewGraph);
 });
 
 // 판매순 그래프를 그린다.(Canvas)
 function drawSaleGraph(data){
 	var context = $('#graph_by_sale')[0].getContext('2d');
 	
-	// TODO x, y 축 그리기
+  // TODO x, y 축 그리기
+  context.beginPath();
+  context.moveTo(70,10);
+  context.lineTo(70,231);
+  context.lineWidth = 2;
+  context.stroke();
+
+  context.lineTo(460,231);
+  context.stroke();
+
 
 	// 막대그래프 그리기
 	var r = 210 / data[0].buyQuantity; // 높이 비율
@@ -41,15 +61,17 @@ function drawSaleGraph(data){
 		var y = 230 - barH;
 		
 		// 채우기 스타일 지정
-		context.fillStyle = 'rgba(186, 68, 10, 0.' + (7-i) + ')';
+		context.fillStyle = 'rgba(196, 18, 10, 0.' + (7-i) + ')';
 		// TODO 막대 그래프 그리기
-
+    context.fillRect(x,y,barW,barH);
 
 		// 텍스트 스타일 지정 출력
 		context.font = '12px "돋움, dotum, 굴림, gulim, sans-serif"';
 		context.fillStyle = 'black';
 		context.textAlign = 'center';
-		// TODO 레이블 출력
+    // TODO 레이블 출력
+    context.fillText(this.couponName  ,x + (barW/2) , 246);
+    context.fillText(this.buyQuantity ,x + (barW/2) , y+14);
 		
 	});
 }
@@ -62,8 +84,8 @@ function drawPointGraph(data){
 	
 	$.each(data, function(i){
 		labels[i] = this.couponName;
-		//points[i] = this.satisfactionAvg * 20;
-		points[i] = this.buyQuantity;
+		points[i] = this.satisfactionAvg * 20;
+		// points[i] = this.buyQuantity;
 	});
 	
 	var hbar = new RGraph.HBar('graph_by_point', points);
@@ -105,12 +127,12 @@ function drawViewGraph(data){
 	
 	$.each(data, function(i){
 		labels.push(this.couponName);
-		//counts.push(this.viewCount);
-		counts.push(this.buyQuantity);
+		counts.push(this.viewCount);
+		// counts.push(this.buyQuantity);
 		if(beforeCoupons.length < data.length){
 			beforeCoupons.push(this._id);
-			//beforeCounts.push(this.viewCount);
-			beforeCounts.push(this.buyQuantity);
+			beforeCounts.push(this.viewCount);
+			// beforeCounts.push(this.buyQuantity);
 		}
 	});
 	
@@ -149,8 +171,8 @@ function drawReplyGraph(data){
 	var dataSet = [];
 	$.each(data, function(i){
 		dataSet[i] = {
-			//data: [[0, this.epilogueCount]], 
-			data: [[0, this.buyQuantity]],
+			data: [[0, this.epilogueCount]], 
+			// data: [[0, this.buyQuantity]],
 			label: this.couponName
 		};
 	});

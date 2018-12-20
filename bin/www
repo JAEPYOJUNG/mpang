@@ -16,9 +16,6 @@ var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
 
 
-
-
-
 /**
  * Create HTTP server.
  */
@@ -28,7 +25,6 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 
 server.listen(port);
 server.on('error', onError);
@@ -93,3 +89,10 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+//socket.io서버구동
+var socketio= require('socket.io').listen(server);
+app.set('io',socketio);
+
+
+//www > app.js > route > module > ejs
