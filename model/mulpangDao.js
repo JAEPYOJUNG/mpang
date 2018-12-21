@@ -158,7 +158,7 @@ exports.buyCoupon = function(params, cb){
 	// 구매 컬렉션에 저장할 형태의 데이터를 만든다.
 	var document = {
 		couponId: new ObjectId(params.couponId),
-		email: 'uzoolove@gmail.com',	// 나중에 로그인한 id로 대체
+		email: params.userid,	// 나중에 로그인한 id로 대체
 		quantity: parseInt(params.quantity),
 		paymentInfo: {
 			cardType: params.cardType,
@@ -251,20 +251,110 @@ exports.registMember = function(params, cb){
 // 로그인 처리
 exports.login = function(params, cb){
 	// TODO 지정한 아이디와 비밀번호로 회원 정보를 조회한다.
-	
+	db.member.findOne(params,{profileImage:1} , function(err,result){
+    if(!result)
+    {
+      err = {message: '아이디와 비밀번호를 확인하시기 바랍니다.'};
+    }
+    cb(err,result);
+  });
 };
 
 // 회원 정보 조회
 exports.getMember = function(userid, cb){
-	
+  db.purchase.aggregate([
+    {$match: {email: userid}},
+    {$lookup: {
+        from: 'coupon',
+        localField: 'couponId',
+        foreignField: '_id',
+        as: 'coupon'
+    }},
+    {$unwind: '$coupon'},
+    {$lookup: {
+        from: 'epilogue',
+        localField: 'epilogueId',
+        foreignField: '_id',
+        as: 'epilogue'
+    }},
+    {$unwind: {
+        path: '$epilogue',
+        preserveNullAndEmptyArrays: true
+    }},
+    {$project: {
+        _id: 1,
+        couponId: 1, 
+        regDate: 1,
+        'coupon.couponName': '$coupon.couponName',
+        'coupon.image.main': '$coupon.image.main',
+        epilogue: 1
+    }},
+    {$sort: {regDate: -1}}
+  ]).toArray(function(err, result){
+    cb(result);
+  });
 };
 
 // 회원 정보 수정
 exports.updateMember = function(userid, params, cb){
-	
+  var oldPassword = params.oldPassword;
+  // 이전 비밀번호로 회원 정보를 조회한다.
+  db.member.findOne({_id: userid, password: oldPassword}, function(err, member){
+    if(!member){
+      err = {message: '이전 비밀번호가 맞지 않습니다.'};
+      cb(err);
+    }else{
+      // 비밀번호 수정일 경우
+      if(params.password.trim() != ''){
+        member.password = params.password;
+      }
+      var tmpFileName = params.tmpFileName;
+      // 프로필 이미지를 수정할 경우
+      if(tmpFileName){
+        // 프로필 이미지 파일명을 회원아이디로 지정한다.
+        member.profileImage = member._id;
+        saveImage(tmpFileName, member.profileImage);  
+      }
+      // 회원 정보를 수정한다.
+      db.member.update({_id: userid}, member, function(err, result){
+        cb(err, result);
+      });
+    }
+  });
 };
+
 
 // 쿠폰 후기 등록
 exports.insertEpilogue = function(userid, params, cb){
-	
+	var purchaseId = ObjectId(params.purchaseId);
+  delete params.purchaseId;
+  var epilogue = params;
+  epilogue._id = ObjectId();
+  epilogue.regDate = MyUtil.getDay();
+  epilogue.couponId = ObjectId(params.couponId);
+  epilogue.writer = userid;
+  db.epilogue.insert(epilogue, function(err, result){
+    if(err){
+      cb({message: '후기 등록에 실패했습니다. 잠시후 다시 이용해 주시기 바랍니다.'});
+    }else{
+      // 구매 컬렉션에 후기 아이디를 등록한다.
+      db.purchase.update({_id: purchaseId}, {$set: {epilogueId: epilogue._id}}, function(err, result){
+        if(err){
+          cb({message: '후기 등록에 실패했습니다. 잠시후 다시 이용해 주시기 바랍니다.'});
+        }else{
+          // 쿠폰 컬렉션의 후기 수와 만족도 합계를 업데이트 한다.
+          db.coupon.findOne({_id: epilogue.couponId}
+                  , {epilogueCount: 1, satisfactionAvg: 1}, function(err, coupon){
+            var query = {
+              $inc: {epilogueCount: 1},
+              $set: {satisfactionAvg: (coupon.satisfactionAvg * coupon.epilogueCount + parseInt(epilogue.satisfaction)) / (coupon.epilogueCount+1)}
+            };
+            db.coupon.update({_id: epilogue.couponId}, query, function(){
+              cb();
+            });
+          });
+        }
+      });
+    }    
+  });
 };

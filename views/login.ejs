@@ -8,8 +8,13 @@
     <div id="main">
 			<section class="form_section">
 				<h1>로그인</h1>
-				<form method="post" action="/users/login">
-					<h2>로그인이 필요합니다.</h2><br>
+        <form method="post" action="/users/login">
+          <% if(typeof errors == 'object'){ %>
+            <h2><%=errors.message%></h2>
+          <% }else{ %>
+            <h2>로그인이 필요합니다.</h2>
+          <% } %>
+          <br>
 					<img src="/image/svg/login.svg">
 					<table>
 						<tr>
