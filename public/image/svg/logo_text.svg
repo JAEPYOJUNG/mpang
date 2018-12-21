@@ -10,7 +10,7 @@
 		}
 		
 		#group_text02{			/*[뭘] 텍스트 그룹영역*/
-			fill:#FFFFFF;
+			fill:#121212;
 		}
 		
 		#group_text03{			/*[파니] 텍스트 그룹영역*/

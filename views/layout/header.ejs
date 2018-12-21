@@ -21,9 +21,9 @@
       <h1 class="blind">로그인</h1>
       <form id="simple_login" name="simple_login_form" action="#" method="post">
         <label for="login_username">아이디</label>
-        <input type="email" id="login_username" name="_id" required placeholder="등록된 e-mail 입력">
-        <label for="login_password">비밀번호</label>
-        <input type="password" id="login_password" name="password" required placeholder="비밀번호 입력">
+        <input type="email" id="login_username" autocomplete="username" name="_id" required placeholder="등록된 e-mail 입력">
+        <label for="login_password" >비밀번호</label>
+        <input type="password" id="login_password" autocomplete="current-password" name="password" required placeholder="비밀번호 입력">
         <input type="submit" value="로그인">
       </form>
       <a href="/users/new" class="member_join">회원가입</a>

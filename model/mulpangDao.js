@@ -200,7 +200,7 @@ var topCoupon = exports.topCoupon = function(condition, cb){
   var fields = {couponName : 1};
   fields [condition] = 1;
   db.coupon.find(query,fields ).sort(order).limit(5).toArray(function(err,result){
-    clog.debug(condition, result);
+    // clog.debug(condition, result);
     cb(result);
   });
 };
@@ -219,15 +219,33 @@ exports.couponQuantity = function(coupons, cb){
 
 // 임시로 저장한 프로필 이미지를 회원 이미지로 변경한다.
 function saveImage(tmpFileName, profileImage){
-	var tmpDir = path.join(__dirname, '..', 'public', 'tmp');
-	var profileDir = path.join(__dirname, '..', 'public', 'image', 'member');
-	// TODO 임시 이미지를 member 폴더로 이동시킨다.
-	
+	var tmpDir      = path.join(__dirname, '..', 'public', 'tmp');
+	var profileDir  = path.join(__dirname, '..', 'public', 'image', 'member');
+  // TODO 임시 이미지를 member 폴더로 이동시킨다.
+  fs.rename(
+    path.join(tmpDir,tmpFileName),
+    path.join(profileDir,profileImage)
+    ,function(err,result){
+      clog.debug(err,result);
+    });
 }
 
 // 회원 가입
 exports.registMember = function(params, cb){
-	
+	var member = {
+    _id : params._id,
+    password: params.password,
+    profileImage: params._id,
+    regDate: MyUtil.getTime()
+  };
+  db.member.insert(member, function(err,result){
+    if(err && err.code == 11000){ //아이디 중복 오류
+      err = {message: '이미 등록된 이메일입니다.'};
+    }else{
+      saveImage(params.tmpFileName, member.profileImage);
+    }
+    cb(err, result);
+  });
 };
 
 // 로그인 처리
