@@ -53,10 +53,7 @@ db.member.update({name:"lee"},{$inc:{age:1}});
 db.member.remove({name:"lee"});
 
 
-
-
-
-
+db.coupon.update({"couponName" : "물냉면" },{ $set:{"saleDate.finish" : "2019-02-02" }})
 
 
 

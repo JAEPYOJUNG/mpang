@@ -1,6 +1,9 @@
-Util.require('https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nk&callback=initMap');
+
+
+Util.require( process.env.google_map_KEY );
 //AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4x --teacher
 // AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nkx --me
+//'https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nkx&callback=initMap'
 // google maps api 참조 -> https://developers.google.com/maps/documentation/javascript/tutorial?hl=ko
 
 /*
