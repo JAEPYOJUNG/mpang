@@ -55,6 +55,7 @@ db.member.remove({name:"lee"});
 
 db.coupon.update({"couponName" : "물냉면" },{ $set:{"saleDate.finish" : "2019-02-02" }})
 
+db.coupon.update({"couponName" : "눈물의 해물 파전" },{ $set:{"saleDate.finish" : "2019-02-02" }})
 
 
 

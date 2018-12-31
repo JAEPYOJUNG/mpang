@@ -9,7 +9,12 @@ var MyUtil = require('../utils/myutil');
 // DB 접속
 var db;
 
-MongoClient.connect(process.env.MONGO_DB||'mongodb://localhost:27017', function(err, client){
+console.log("===================");
+// console.log(process.env.MONGO_DB);
+console.log(process.env.MONGO_DB2);
+console.log("===================");
+
+MongoClient.connect(process.env.MONGO_DB2 , function(err, client){
 	db = client.db('mpang');
 	db.member = db.collection('member');
 	db.shop = db.collection('shop');

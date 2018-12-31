@@ -1,6 +1,8 @@
 
 
-Util.require( process.env.google_map_KEY );
+
+
+Util.require( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nk&callback=initMap' );
 //AIzaSyAHGb0FNR3ktsVVgIvsCdzy1viEvCpJcx4x --teacher
 // AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nkx --me
 //'https://maps.googleapis.com/maps/api/js?key=AIzaSyBzXhcctEZ2paK0g0IuemgmAuxkqPhw2Nkx&callback=initMap'

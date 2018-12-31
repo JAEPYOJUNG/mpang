@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
-    ,"db": "C:/html5project/MongoDB/Server/3.4/bin/mongod --dbpath c:/html5project/mongodb/data"
-  
+    
   },
   "dependencies": {
     "clog": "~0.1.6",
